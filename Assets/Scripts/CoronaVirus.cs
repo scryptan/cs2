@@ -1,6 +1,6 @@
 ﻿public class CoronaVirus: IVirus
 {
-    public int InfectChance => 70;
-    public int RecoveryChance => 10;
-    public int DeadChance => 15;
+    public int InfectChance => 40;
+    public int RecoveryChance => 24;
+    public int DeadChance => 5;
 }

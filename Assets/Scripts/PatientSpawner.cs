@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PatientSpawner : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class PatientSpawner : MonoBehaviour
     [SerializeField] private Transform rightBound;
     private List<GameObject> patients;
     private List<Patient> immunities;
+    [SerializeField] private float radius = 0.3f;
     void Start()
     {
         patients = new List<GameObject>();
@@ -28,7 +31,7 @@ public class PatientSpawner : MonoBehaviour
             patients.Add(go);
             go.GetComponent<IActorMover>().SetBound(leftTopBound.position, rightBound.position);
             immunities.Add(go.GetComponent<ImmunityController>().Patient);
-            if (Random.Range(0, 100) < 10)
+            if (Random.Range(0, 100) < 3)
                 go.GetComponent<ImmunityController>().Patient.IsInfected = true;
         }
 
@@ -58,7 +61,7 @@ public class PatientSpawner : MonoBehaviour
             {
                 for (int j = i + 1; j < patients.Count; j++)
                 {
-                    if (Vector3.Distance(patients[i].transform.position, patients[i].transform.position) < 3)
+                    if (Vector3.Distance(patients[i].transform.position, patients[i].transform.position) < radius)
                     {
                         immunities[i].Infect();
                         immunities[j].Infect();
@@ -67,7 +70,7 @@ public class PatientSpawner : MonoBehaviour
                     yield return null;
                 }
             }
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(2);
         }
     }
     
@@ -79,8 +82,9 @@ public class PatientSpawner : MonoBehaviour
             {
                 if(immunity.IsInfected)
                     immunity.Recovery();
+                yield return null;
             }
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(2);
         }
     }
 }
