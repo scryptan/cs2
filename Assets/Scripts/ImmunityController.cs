@@ -9,7 +9,7 @@ public class ImmunityController : MonoBehaviour
     public ImmunityController()
     {
         virus = new CoronaVirus();
-        Patient = new NormalPatient(virus, Infected, Recovered);
+        Patient = new NormalPatient(virus, Infected, Recovered, Dead);
     }
 
     private void Infected()
@@ -19,6 +19,11 @@ public class ImmunityController : MonoBehaviour
 
     private void Recovered()
     {
-        GetComponent<SpriteRenderer>().color = Color.blue;
+            GetComponent<SpriteRenderer>().color = Color.blue;
+    }
+
+    private void Dead()
+    {
+        GetComponent<SpriteRenderer>().color = Color.black;
     }
 }

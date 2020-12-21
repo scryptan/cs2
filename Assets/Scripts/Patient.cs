@@ -6,14 +6,17 @@ public abstract class Patient
     protected readonly IVirus Virus;
     private readonly Action _infected;
     private readonly Action _recovered;
+    private readonly Action _dead;
     private bool isInfected;
     private bool hasImmunity;
+    private bool isDead;
 
-    protected Patient(IVirus virus, Action infected, Action recovered)
+    protected Patient(IVirus virus, Action infected, Action recovered, Action dead)
     {
         Virus = virus;
         _infected = infected;
         _recovered = recovered;
+        _dead = dead;
     }
 
     public bool IsInfected
@@ -36,9 +39,22 @@ public abstract class Patient
         }
     }
 
+    public bool HasDied
+    {
+        get => isDead;
+        set
+        {
+            if (value) _dead?.Invoke();
+            isDead = value;
+        }
+    }
+
+
     public abstract void Infect();
     public abstract void Recovery();
+    public abstract void WillDie();
 
     protected int InfectOffset;
     protected int RecoveryOffset;
+    protected int DeadOffset;
 }
