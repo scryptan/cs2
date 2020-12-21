@@ -13,7 +13,7 @@ public class PatientSpawner : MonoBehaviour
     [SerializeField] private Transform leftTopBound;
 
     [SerializeField] private Transform rightBound;
-    public List<GameObject> patients { get; private set; }
+    private List<GameObject> patients;
     private List<Patient> immunities;
     [SerializeField] private float radius = 0.3f;
     void Start()
