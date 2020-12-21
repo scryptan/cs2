@@ -13,7 +13,7 @@ public class PatientSpawner : MonoBehaviour
     [SerializeField] private Transform leftTopBound;
 
     [SerializeField] private Transform rightBound;
-    private List<GameObject> patients;
+    public List<GameObject> patients { get; private set; }
     private List<Patient> immunities;
     [SerializeField] private float radius = 0.3f;
     void Start()
@@ -35,14 +35,17 @@ public class PatientSpawner : MonoBehaviour
                 go.GetComponent<ImmunityController>().Patient.IsInfected = true;
         }
 
+
+        
         StartCoroutine(Move());
         StartCoroutine(TryToInfect());
         StartCoroutine(TryToRecover());
+        StartCoroutine(TryNotToDie());
     }
     
     IEnumerator Move()
     {
-        var _movers = patients.Select(x => x.GetComponent<IActorMover>());
+        var _movers = patients.Where(x => !x.GetComponent<ImmunityController>().Patient.HasDied).Select(x => x.GetComponent<IActorMover>());
         while (true)
         {
             foreach (var mover in _movers)
@@ -61,10 +64,10 @@ public class PatientSpawner : MonoBehaviour
             {
                 for (int j = i + 1; j < patients.Count; j++)
                 {
-                    if (Vector3.Distance(patients[i].transform.position, patients[i].transform.position) < radius)
+                    if (Vector3.Distance(patients[i].transform.position, patients[j].transform.position) < radius && (immunities[i].IsInfected || immunities[j].IsInfected))
                     {
-                        immunities[i].Infect();
-                        immunities[j].Infect();
+                            immunities[i].Infect();
+                            immunities[j].Infect();
                     }
 
                     yield return null;
@@ -80,8 +83,25 @@ public class PatientSpawner : MonoBehaviour
         {
             foreach (var immunity in immunities)
             {
-                if(immunity.IsInfected)
+                if (immunity.IsInfected && !immunity.HasDied)
                     immunity.Recovery();
+                yield return null;
+            }
+            yield return new WaitForSeconds(2);
+        }
+    }
+
+    IEnumerator TryNotToDie()
+    {
+        while (true)
+        {
+            foreach (var patient in patients)
+            {
+                var patientImmunity = patient?.GetComponent<ImmunityController>().Patient;
+                if (patientImmunity.IsInfected)              
+                    patientImmunity.WillDie();
+                if (patientImmunity.HasDied)
+                    patient?.GetComponent<IActorMover>().SetVelocityVector(new Vector2(0, 0));
                 yield return null;
             }
             yield return new WaitForSeconds(2);
