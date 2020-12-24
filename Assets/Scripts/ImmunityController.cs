@@ -19,7 +19,7 @@ public class ImmunityController : MonoBehaviour
 
     private void Recovered()
     {
-            GetComponent<SpriteRenderer>().color = Color.blue;
+        GetComponent<SpriteRenderer>().color = Color.blue;
     }
 
     private void Dead()

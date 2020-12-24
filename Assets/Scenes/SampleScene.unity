@@ -155,7 +155,7 @@ MonoBehaviour:
   patientCount: 1000
   leftTopBound: {fileID: 669980561}
   rightBound: {fileID: 1307948598}
-  radius: 0.3
+  radius: 3
 --- !u!4 &505392357
 Transform:
   m_ObjectHideFlags: 0
